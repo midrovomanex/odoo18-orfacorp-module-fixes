@@ -2,7 +2,7 @@
 Este documento registra los errores identificados durante la instalación de módulos en Odoo 18, con el fin de facilitar su análisis, corrección y seguimiento.
 
 ## Directorio app_store
-#### **account_report_send_by_mail:**
+#### **account_report_send_by_mail:** 
     - Estado: No instala
     - Error: Dependencia faltante
     - Detalle: El módulo depende de account_reports, el cual no está disponible en el sistema
