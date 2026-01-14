@@ -2,9 +2,10 @@
 Este documento registra los errores identificados durante la instalación de módulos en Odoo 18, con el fin de facilitar su análisis, corrección y seguimiento.
 
 ## Directorio app_store
-#### **account_report_send_by_mail:** 
+#### **account_report_send_by_mail:** ❌
     - Estado: No instala
-    - Error: Dependencia faltante
+    - Error 1: Dependencia faltante
+    - Error 2: Los módulos "MuK Backend Theme" y "Web Enterprise" no son incompatibles. (Despues de instalar account_reports)
     - Detalle: El módulo depende de account_reports, el cual no está disponible en el sistema
 
 #### **advanced_web_domain_widget:**
@@ -69,6 +70,8 @@ Este documento registra los errores identificados durante la instalación de mó
     - Error: No existe is_internal_transfer en account_payment
     - Detalle: En la version 16 si existia, en la version 18 se utiliza destination_journal_id que indica una transferencia interna
     - Solucion: Omitir ese campo
+
+
 ---
 
 ## Directorio extras
