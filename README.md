@@ -140,7 +140,7 @@ Este documento registra los errores identificados durante la instalación de mó
     - Error 1: El modelo account.tax.template no existe
     - Detalle: En versiones anteriores existia el modelo account.tax.template, parece que en la version 18 fue removido o reemplazado
 
-#### **mejoras_trueque** ❌
+#### **mejoras_trueque** ✅
     - Estado: No instala
     - Error 1: No existe el campo is_internal_transfer en account.payment
     - Detalle: En versiones anteriores existia el campo is_internal_transfer, parece que en la version 18 fue removido o reemplazado
