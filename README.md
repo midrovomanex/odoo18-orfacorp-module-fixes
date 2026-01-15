@@ -73,6 +73,12 @@ Este documento registra los errores identificados durante la instalación de mó
     - Error 1: Archivo manifest no valido (ec_cash, ec_withholding)
     - Error 2: El modelo account.tax.template no existe
     - Detalle: Los modulos se encuentran en la version 16 (solucionado) el otro detalle es que en versiones anteriores existia el modelo account.tax.template, parece que en la version 18 fue removido o reemplazado
+    - Cambios:
+        - En ec_chart_template: se cambia la referencia del path para colocar el boton para cargar plantilla contable.
+        - En ec_remision: refactorizacion de account.remision.line mala importacion de decimal_precision y la clase Warning de odoo.exception ya no existe se cambio por UseError, se comenta el wizard document_number ya no existe stock.immediate.transfer que es un TransiendModel, en el archivo csv iba esta linea # "access_model_wizard_input_document_number_group_user","access_model_wizard_input_document_number_group_user","model_wizard_input_document_number","base.group_user",1,1,1,1. Tambien depende de stock_delivey. Correccion del res_config_view.
+        - En ec_withholding: cambios en referencias xpath, se quita Warning de odoo.exception.
+        - En ec_ats: se ordena importacion en el __init__ se corrige el report_data.xml, se corrige tree por list
+        - En ec_account_edi: se corrige Warning de odoo.exception. Se instala libreria xmlsig suds xades
 
 #### **ec_payment_check | ec_account_payment** 
     - Estado: No instala
