@@ -2,7 +2,7 @@
 Este documento registra los errores identificados durante la instalación de módulos en Odoo 18, con el fin de facilitar su análisis, corrección y seguimiento.
 
 ## Directorio app_store
-#### **account_report_send_by_mail:** ❌
+#### **account_report_send_by_mail:** ✅
     - Estado: No instala
     - Error 1: Dependencia faltante
     - Error 2: Los módulos "MuK Backend Theme" y "Web Enterprise" no son incompatibles. (Despues de instalar account_reports)
@@ -15,6 +15,7 @@ Este documento registra los errores identificados durante la instalación de mó
     - Detalle: Error al cargar @advanced_web_domain_widget/core/domain_selector domain_selector_operators (TypeError: _lt is not a function)
     - Impacto: La interfaz web no carga correctamente
     - Solución inmediata: Comentar los assets del módulo en el __manifest__.py
+    - Solucion: se corrigen los errores de los assets cambios significativos rpc y _lt
 
 #### **aspl_stock_inventory_report_ee:** ✅
     - Estado: No instala
@@ -68,7 +69,7 @@ Este documento registra los errores identificados durante la instalación de mó
     - Detalle: Los modulos se encuentran en la version 16
     - Solucion: Se realiza mantenimiento para que funcione en la version 18
 
-#### **ec_cash | ec_withholding | ec_account_base | ec_account_edi | ec_account_edi_load | ec_ats | ec_chart_template_update | ec_install | ec_payment_check | ec_payment_tc** ❌
+#### **ec_cash | ec_withholding | ec_account_base | ec_account_edi | ec_account_edi_load | ec_ats | ec_chart_template_update | ec_install | ec_payment_check | ec_payment_tc** ✅
     - Estado: No instala
     - Error 1: Archivo manifest no valido (ec_cash, ec_withholding)
     - Error 2: El modelo account.tax.template no existe
@@ -78,23 +79,27 @@ Este documento registra los errores identificados durante la instalación de mó
         - En ec_remision: refactorizacion de account.remision.line mala importacion de decimal_precision y la clase Warning de odoo.exception ya no existe se cambio por UseError, se comenta el wizard document_number ya no existe stock.immediate.transfer que es un TransiendModel, en el archivo csv iba esta linea # "access_model_wizard_input_document_number_group_user","access_model_wizard_input_document_number_group_user","model_wizard_input_document_number","base.group_user",1,1,1,1. Tambien depende de stock_delivey. Correccion del res_config_view.
         - En ec_withholding: cambios en referencias xpath, se quita Warning de odoo.exception.
         - En ec_ats: se ordena importacion en el __init__ se corrige el report_data.xml, se corrige tree por list
-        - En ec_account_edi: se corrige Warning de odoo.exception. Se instala libreria xmlsig suds xades
+        - En ec_account_edi: se corrige Warning de odoo.exception. Se instala libreria xmlsig suds xades, Se corrigen errores de mail y report (se elimina referencia report_tample, report_name) ahora desarrollarlo en python, se corrige una vista que contiene field_parent ya no existe, payment_state ya no existe puede que haya sido reemplazado por status_in_payment.
+        - En ec_account_edi_load: instalacion de libreria xmltodict-1.0.2. 
+        - ec_payment_tc: se reemplaza tree por list.
+        - ec_payment_check: en version 18 ya no existe los campos is_internal_transfer, destination_journal_id y secure_sequence_id
 
-#### **ec_payment_check | ec_account_payment** 
+#### **ec_payment_check | ec_account_payment** ✅
     - Estado: No instala
     - Error: No existe is_internal_transfer en account_payment
-    - Detalle: En la version 16 si existia, en la version 18 se utiliza destination_journal_id que indica una transferencia interna
-    - Solucion: Omitir ese campo
+    - Detalle: En la version 18 ya no existen los campos is_internal_transfer ni destination_journal_id
+    - Solucion: Omitir campos
 
-#### **ec_chart_template_update**
+#### **ec_chart_template_update** ✅
     - Estado: No instala
     - Error: External Id no encontrado
     - Detalle: No existe la vista account_usability.view_account_account_template_tree
 
-#### **ec_remision | ec_sri_authorizathions**
+#### **ec_remision | ec_sri_authorizathions** ✅
     - Estado: No instala
     - Error: Invalid field
     - Detalle: No encuentra el campo secure_sequence_id en account.journal en odoo 18 fue removido
+    - Soluicion: Se resuelven los errores 
 
 ---
 
@@ -111,10 +116,11 @@ Este documento registra los errores identificados durante la instalación de mó
     - Detalle: El archivo de las credenciales se encuentra en la carpeta firebase recomendable colocar en variables de entorno, ademas habia una importacion recursiva en el archivo firebase_connection.py
     - Solucion: Se anade la ruta absoluta del archivo de credenciales (Cambiar esto ya en produccion) y se comenta la importacion mal definida del archivo .py antes mencionado
 
-#### **cartera_odoo** ❌
+#### **cartera_odoo** ✅
     - Estado: No instala
     - Error: El campo check_count que esta en la vista res_partner no existe
-    - Detalle: El campo check_count esta comentado en una herencia de res_partner revisar check.customer.line
+    - Detalle: El campo check_count esta comentado en una herencia de res_partner revisar check.customer.line y este modelo se encuentra en ec_payment_check por lo tanto se anade dependencia en cartera_odoo
+    - Solucion: se corrigen los errores de dependencias se descomenta check_count
 
 #### **catalog_app** ✅
     - Estado: No instala
@@ -130,21 +136,22 @@ Este documento registra los errores identificados durante la instalación de mó
     - Solucion 2: Ya no se acepta el valor false en la propiedad editable de los xml solo top o bottom
     - Observacion: Existe el mismo modelo product.excel.extend en el modulo informes_cartera
 
-#### **importaciones_trueque** ❌
+#### **importaciones_trueque** ✅
     - Estado: No instala
     - Error: Dependencias faltantes
     - Detalle: Está intentando instalar el módulo “ec_sri_authorizathions” que depende del módulo “account_accountant”.
 
-#### **l10n_ec_reports** ❌
+#### **l10n_ec_reports** ❌ Fue reemplazado por account_financial_report
     - Estado: No instala
     - Error 1: Dependencias faltantes
     - Error 2: Los módulos "MuK Backend Theme" y "Web Enterprise" no son incompatibles.
     - Detalle: Está intentando instalar el módulo “l10n_ec_reports” que depende del módulo “account_reports”. luego de la instalacion de la dependencia salio el segundo error
 
-#### **mejoras_ec_account_edi | validaciones_campos** ❌
+#### **mejoras_ec_account_edi | validaciones_campos** ✅
     - Estado: No instala
     - Error 1: El modelo account.tax.template no existe
     - Detalle: En versiones anteriores existia el modelo account.tax.template, parece que en la version 18 fue removido o reemplazado
+    - Solucion: se resuelven los errores de account.tax.template
 
 #### **mejoras_trueque** ✅
     - Estado: No instala
@@ -165,7 +172,7 @@ Este documento registra los errores identificados durante la instalación de mó
 ---
 
 ## Directorio oca
-#### **account_template_active** ❌
+#### **account_template_active** ❌ Ya no es necesario
     - Estado: No instala
     - Error: No encuentra la referencia de una vista xml
     - Detalle: Este modulo depende de account_usability y no encuentra la vista xml a la que hereda
@@ -203,10 +210,11 @@ Este documento registra los errores identificados durante la instalación de mó
     - Detalle: El campo date_planned_start no existe en mr.production se reviso en el modelo nativo y demas directorios y no existe ese campo
     - Solucion: Se anade campo date_planned_start y se ajusta el menuitem para que se muestre el wizar en el menu de contabilidad
 
-#### **orfa_negar_cupo** ❌
+#### **orfa_negar_cupo** ✅
     - Estado: No instala
     - Error: No encuentra la expresion xpath approve_cupoo y global_disc
     - Detalle: falta dependencia en el manifest esos campos se los define en el modulo cartera_odoo
+    - Solucion: se resuelven los errores y cambios en las vistas ya no se usa attrs
 
 #### **rest_api_warehouse_filter** ✅
     - Estado: No instala
@@ -220,33 +228,43 @@ Este documento registra los errores identificados durante la instalación de mó
     - Detalle: En version actual ya no se aplica numbercall en los cron
     - Solucion: comentar numbercall
 
-#### **facturas_de_reembolso** ❌
+#### **facturas_de_reembolso** ✅
     - Estado: No instala
     - Error: El campo secure_sequence_id no existe en account.journal
-    - Detalle: En versiones anteriores el campo existia ahora fue removido o reemplazado para la version 18
+    - Detalle: En versiones anteriores el campo existia ahora fue removido o reemplazado para la version 18 y reemplazos de tree a list
+    - Solucion: se resuelven los errores
 
-#### **generate_ean13** ❌
+#### **generate_ean13** ✅
     - Estado: No instala
     - Error: Expresion xpath no encontrada sale_ebay
     - Detalle: No se encuentra el campo sale_ebay en ningun otro modulo
+    - Solucion: ya no existe el div sale_ebay ahora se referencia por connectors_setting_container
 
-#### **informes_cartera | orfa_anadir_analiticas | orfa_aprobacion_pagos | orfa_liquidacion_compras | orfa_viaticos** ❌
+#### **informes_cartera | orfa_anadir_analiticas | orfa_aprobacion_pagos | orfa_liquidacion_compras | orfa_viaticos** ✅
     - Estado: No instala
     - Error 1: El modelo account.tax.template no existe
     - Detalle: En versiones anteriores existia el modelo account.tax.template, parece que en la version 18 fue removido o reemplazado
+    - Cambios: 
+        - en informe_cartera: no existen los campos invoice_user_id y amount_residual en account.payment. Crearlos si es necesario
+
 
 #### **informes_pagos | sincronizar_clientes** ✅
     - Estado: No instala
     - Error 1: No existe el campo is_internal_transfer en account.payment
     - Detalle: En versiones anteriores existia el campo is_internal_transfer, parece que en la version 18 fue removido o reemplazado
 
-#### **orfa_negar_cupo** ❌
+#### **orfa_negar_cupo** ✅
     - Estado: No instala
     - Error: El campo check_count que esta en la vista res_partner no existe, depende de cartera_odoo
     - Detalle: El campo check_count esta comentado en una herencia de res_partner revisar check.customer.line
+    - Solucionado
 
-#### **presale_order** ❌
+#### **presale_order** ✅
     - Estado: No instala
-    - Error: El campo blocked no existe en res_partner
-    - Detalle: El campo blocked no existe en res_partner y partner_blocked lo esta utilizando en un related
+    - Error: Referencias de vistas tree obsoletas
+    - Detalle: Las vistas tree fueron reemplazadas por list
+    - Solucion: Se corrigen las vistas tree
 
+
+## MODULOS PENDIENTES POR RESOLVER
+#### **account_template_active** (extras) ❌ Ya no es necesario usar en la version 18
